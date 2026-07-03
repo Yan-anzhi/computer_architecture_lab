@@ -19,9 +19,11 @@ The experiments are implemented on the Sipeed Tang Nano 20K FPGA development boa
 
 * Sipeed Tang Nano 20K FPGA Development Board
 * Gowin FPGA Designer and Gowin Programmer
+* MounRiver Studio Community
 * HDMI monitor
 * TF card
 * Joystick controller and Joystick to DIP convert board
+* USB serial assistant
 
 ---
 
@@ -37,6 +39,9 @@ computer_architecture_lab/
 │   ├── notes/
 │   ├── screenshots/
 │   └── videos/
+├── lab3/           Lab 3 SparrowRV RISC-V processor experiment
+│   ├── SparrowRV/
+│   └── result_pics/
 ├── .gitignore
 └── README.md
 ```
@@ -129,10 +134,47 @@ For copyright considerations, `.nes` ROM files and the generated `games.img` fil
 
 # Lab 3 - SparrowRV RISC-V Processor Experiment
 
-Lab 3 will be completed later. It will focus on compiling, deploying, and analyzing a RISC-V processor project on the Tang Nano 20K FPGA board.
+## Objectives
+
+Lab 3 deploys and verifies the SparrowRV RISC-V processor on the Tang Nano 20K FPGA board. The experiment includes software compilation, instruction memory initialization, FPGA synthesis and implementation, UART output verification, and source-level analysis of the SparrowRV processor structure.
+
+## External Project
+
+The experiment uses the SparrowRV project from Gitee. The selected version provides BSP software, RTL source files, Gowin FPGA project files, testbench tools, and reference documents.
+
+Main files used:
+
+```text
+rtl/                                  SparrowRV processor and SoC RTL source files
+bsp/bsp_app/app/main.c                 Hello World APP source code
+bsp/bsp_app/SparrowRV_APP.wvproj       MounRiver Studio APP project
+fpga/gowin_tang_nano_20k/              Gowin FPGA project for Tang Nano 20K
+tb/inst.txt                            Instruction memory initialization file
+```
+
+## Implementation Summary
+
+The SparrowRV APP project was compiled in MounRiver Studio to generate `SparrowRV_APP.bin`. The binary file was then converted into `inst.txt`, which is loaded into instruction memory through Verilog `$readmemh` during Gowin synthesis.
+
+The Gowin project for Tang Nano 20K was synthesized, placed, routed, and programmed to the FPGA. During implementation, an FPIOA port constraint issue was fixed by matching the RTL port configuration with the CST pin constraints. After downloading the generated `.fs` file, the serial assistant successfully received repeated Hello World output and system information from the SparrowRV processor.
+
+## Result Files
+
+```text
+lab3/SparrowRV/rtl/
+lab3/SparrowRV/bsp/bsp_app/app/main.c
+lab3/SparrowRV/bsp/bsp_app/SparrowRV_APP.wvproj
+lab3/SparrowRV/fpga/gowin_tang_nano_20k/
+lab3/SparrowRV/tb/inst.txt
+lab3/result_pics/
+```
+
+## Verification Result
+
+The UART output confirmed that the APP program was successfully initialized into IRAM and executed by the SparrowRV processor on FPGA. The output included Hello World messages, system frequency, IRAM size, SRAM size, and Vendor ID information.
 
 ---
 
 ## Notes
 
-This repository is used for course laboratory documentation and source management. Large generated files, temporary build outputs, ROM images, and local cache files are excluded by `.gitignore`.
+This repository is used for course laboratory documentation and source management. Large generated files, temporary build outputs, ROM images, FPGA intermediate files, and local cache files are excluded by `.gitignore`.
